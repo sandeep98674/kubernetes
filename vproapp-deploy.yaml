@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vproapp-deployment
+spec:
+  selector:
+    matchLabels:
+      app: vproapp
+  template:
+    metadata:
+      labels:
+        app: vproapp 
+    spec:
+      containers:
+      - name: vproapp
+        image: sandipgghimire/vproapp:
+        ports:
+        - name: vproapp-port   
+          containerPort: 8080
+      initContainers:
+      - name: wait-for-db
+        image: busybox
+        command: ['sh', '-c', 'until nc -z vprodb 3306; do echo waiting for db; sleep 2; done;']
+      - name: wait-for-rbq
+        image: busybox 
+        command: ['sh', '-c', 'until nc -z vpromq01 5672; do echo waiting for rabbitmq; sleep 2; done;']
+      - name: wait-for-mc
+        image: busybox 
+        command: ['sh', '-c', 'until nc -z vpromcache01 11211; do echo waiting for memcached; sleep 2; done;']  
+        
+        
