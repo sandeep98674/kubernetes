@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 3Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+# please make sure to create the directory /mnt/data on the node where you want to use this PV and give it appropriate permissions. 
+# mkdir -p /mnt/data
+# chmod 777 /mnt/data
